@@ -106,8 +106,8 @@ func (c *MRCluster) worker() {
 				}
 				results := t.mapF(t.mapFile, string(content))
 				for _, kv := range results {
-					enc := json.NewEncoder(bs[ihash(kv.Key)%t.nReduce])
-					if err := enc.Encode(&kv); err != nil {
+					_, err := fmt.Fprintln(bs[ihash(kv.Key)%t.nReduce], kv.Key+"#"+kv.Value)
+					if err != nil {
 						log.Fatalln(err)
 					}
 				}
@@ -134,13 +134,9 @@ func (c *MRCluster) worker() {
 							continue
 						}
 
-						var kv KeyValue
-						err = json.Unmarshal(l, &kv)
-						if err != nil {
-							panic(err)
-						}
-
-						kvMap[kv.Key] = append(kvMap[kv.Key], kv.Value)
+						tmp := bytes.Split(l, []byte("#"))
+						//var kv = KeyValue{string(tmp[0]), string(tmp[1])}
+						kvMap[string(tmp[0])] = append(kvMap[string(tmp[0])], string(tmp[1]))
 					}
 				}
 
