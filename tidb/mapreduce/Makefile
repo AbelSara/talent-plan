@@ -13,3 +13,13 @@ cleanup:
 
 gendata:
 	go test -v -run=TestGenData
+
+te:
+	go test -v -run=TestExampleURLTop -timeout 20m -cpuprofile=cpu.profile -blockprofile=block.profile -memprofile=mem.profile
+
+memp:
+	go tool pprof -http=:8080 ./talent.test ./mem.profile
+cpup:
+	go tool pprof -http=:8080 ./talent.test ./cpu.profile
+blockp:
+	go tool pprof -http=:8080 ./talent.test ./block.profile

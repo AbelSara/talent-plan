@@ -85,9 +85,10 @@ func (c *MRCluster) Start() {
 	}
 }
 
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
+
 func (c *MRCluster) worker() {
 	defer c.wg.Done()
-	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	for {
 		select {
 		case t := <-c.taskCh:
